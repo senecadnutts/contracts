@@ -6,9 +6,9 @@ import deployedContracts from "../constants/output/ProtocolOutput.json";
 async function main() {
   const factory = await getContractAt<PoolFactory>(
     "PoolFactory",
-    deployedContracts.poolFactory
+    deployedContracts.PoolFactory
   );
-  const voter = await getContractAt<Voter>("Voter", deployedContracts.voter);
+  const voter = await getContractAt<Voter>("Voter", deployedContracts.Voter);
 
   // Deploy non-AERO pools and gauges
   for (var i = 0; i < jsonConstants.pools.length; i++) {
@@ -28,7 +28,7 @@ async function main() {
       }
     );
     await voter.createGauge(
-      deployedContracts.poolFactory, // PoolFactory
+      deployedContracts.PoolFactory, // PoolFactory
       pool[0],
       { gasLimit: 5000000 }
     );
@@ -39,22 +39,22 @@ async function main() {
     const [stable, token] = Object.values(jsonConstants.poolsAero[i]);
     await factory.functions["createPool(address,address,bool)"](
       deployedContracts.AERO,
-      token,
-      stable,
+      token as string,
+      stable as boolean,
       {
         gasLimit: 5000000,
       }
     );
     let pool = await factory.functions["getPool(address,address,bool)"](
       deployedContracts.AERO,
-      token,
-      stable,
+      token as string,
+      stable as boolean,
       {
         gasLimit: 5000000,
       }
     );
     await voter.createGauge(
-      deployedContracts.poolFactory, // PoolFactory
+      deployedContracts.PoolFactory, // PoolFactory
       pool[0],
       { gasLimit: 5000000 }
     );
